@@ -40,7 +40,7 @@ namespace HelpLac.Repository
            await Task.Run(() => _dataset.RemoveRange(entityArray));
 
         public async Task<TEntity> GetByIdAsync(TId id, CancellationToken cancellationToken) =>
-            await _dataset.FindAsync(id, cancellationToken);
+            await _dataset.FindAsync(id);
 
         public async Task<List<TEntity>> GetAllAsync(CancellationToken cancellationToken) =>
            await _dataset.ToListAsync(cancellationToken);

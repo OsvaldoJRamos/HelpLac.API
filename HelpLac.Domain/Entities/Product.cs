@@ -10,10 +10,16 @@ namespace HelpLac.Domain.Entities
         [Key]
         public Guid Id { get; private set; } = Guid.NewGuid();
         public string Name { get; private set; }
+        public bool ContainsLactose { get; private set; }
+        public string Ingredients { get; private set; }
+        public byte[] Image { get; private set; }
 
-        public Product(string name)
+        public Product(string name, bool containsLactose, string ingredients, byte[] image)
         {
             Name = name;
+            ContainsLactose = containsLactose;
+            Ingredients = ingredients;
+            Image = image;
         }
 
         public override void Validate()
