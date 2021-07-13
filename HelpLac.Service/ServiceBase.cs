@@ -1,65 +1,65 @@
 ﻿using HelpLac.Domain.Entities.Base;
+using HelpLac.Repository;
+using HelpLac.Repository.Interfaces;
 using HelpLac.Service.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace HelpLac.Service
 {
-    public class ServiceBase<TEntity, TId, TRepository> : IServiceBase<TEntity, TId, TRepository>
+    public abstract class ServiceBase<TEntity, TId, TRepository> : IServiceBase<TEntity, TId, TRepository>
                                      where TEntity : EntityBase
                                      where TRepository : IRepositoryBase<TEntity, TId>
     {
 
-        protected readonly TRepository _repositorio;
+        protected readonly TRepository _repository;
 
         public ServiceBase(TRepository repositorio)
         {
-            _repositorio = repositorio;
+            _repository = repositorio;
         }
 
-        public async Task<TEntity> UpdateAsync(TEntity entity)
+        public virtual async Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken)
         {
-            var item = await _repositorio.UpdateAsync(entity);
-            await _repositorio.SaveChangesAsync();
+            var item = await _repository.UpdateAsync(entity, cancellationToken);
+            await _repository.SaveChangesAsync(cancellationToken);
             return item;
         }
 
-        public async Task<TEntity> AddAsync(TEntity entity)
+        public virtual async Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken)
         {
             entity.Validate();
-            var item = await _repositorio.AddAsync(entity);
-            await _repositorio.SaveChangesAsync();
+            var item = await _repository.AddAsync(entity, cancellationToken);
+            await _repository.SaveChangesAsync(cancellationToken);
             return item;
         }
 
-        public async Task DeleteAsync(TEntity entity)
+        public async Task DeleteAsync(TEntity entity, CancellationToken cancellationToken)
         {
-            await _repositorio.DeleteAsync(entity);
-            await _repositorio.SaveChangesAsync();
+            await _repository.DeleteAsync(entity, cancellationToken);
+            await _repository.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task DeleteByIdAsync(TId id)
+        public async Task DeleteByIdAsync(TId id, CancellationToken cancellationToken)
         {
-            await _repositorio.DeleteByIdAsync(id);
-            await _repositorio.SaveChangesAsync();
+            await _repository.DeleteByIdAsync(id, cancellationToken);
+            await _repository.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task DeleteManyAsync(TEntity[] entityArray)
+        public async Task DeleteManyAsync(TEntity[] entityArray, CancellationToken cancellationToken)
         {
-            await _repositorio.ExcluirVarios(entityArray);
-            await _repositorio.SaveChangesAsync();
+            await _repository.DeleteManyAsync(entityArray, cancellationToken);
+            await _repository.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task<TEntity> GetByIdAsync(TId id)
+        public async Task<TEntity> GetByIdAsync(TId id, CancellationToken cancellationToken)
         {
-            return await _repositorio.GetByIdAsync(id);
+            return await _repository.GetByIdAsync(id, cancellationToken);
         }
 
-        public async Task<bool> SaveChangesAsync()
+        public async Task<bool> SaveChangesAsync(CancellationToken cancellationToken)
         {
-            return await _repositorio.SaveChangesAsync();
+            return await _repository.SaveChangesAsync(cancellationToken);
         }
     }
 }

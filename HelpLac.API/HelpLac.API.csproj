@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HelpLac.Repository\HelpLac.Repository.csproj" />
+    <ProjectReference Include="..\HelpLac.Service\HelpLac.Service.csproj" />
   </ItemGroup>
 
 

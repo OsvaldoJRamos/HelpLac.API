@@ -1,6 +1,9 @@
 using AutoMapper;
 using HelpLac.API.Mappings;
 using HelpLac.Repository;
+using HelpLac.Repository.Interfaces;
+using HelpLac.Service;
+using HelpLac.Service.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Rewrite;

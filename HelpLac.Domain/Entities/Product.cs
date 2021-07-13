@@ -1,9 +1,7 @@
 ﻿using HelpLac.Domain.Entities.Base;
 using HelpLac.Domain.Validation;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace HelpLac.Domain.Entities
 {

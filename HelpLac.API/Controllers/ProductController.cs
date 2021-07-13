@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using HelpLac.Domain.Validation;
+using HelpLac.Service.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace HelpLac.API.Controllers
@@ -22,14 +23,14 @@ namespace HelpLac.API.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Guid))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Create([FromBody] CriarUsuarioViewModel viewModel)
+        public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
             try
             {
-                await _usuarioServico.Criar(usuario);
-                return new ObjectResult(usuario.UsuarioId);
+                var product = await _productService.CreateAsync(cancellationToken);
+                return new ObjectResult(product);
             }
-            catch (ValidacaoEntidadeException ex)
+            catch (ValidationEntityException ex)
             {
                 return BadRequest(ex.Message);
             }
