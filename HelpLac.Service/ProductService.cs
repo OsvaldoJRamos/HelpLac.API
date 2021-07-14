@@ -3,6 +3,7 @@ using HelpLac.Domain.Entities;
 using HelpLac.Domain.PaginatedEntities;
 using HelpLac.Domain.Validation;
 using HelpLac.Repository.Interfaces;
+using HelpLac.Service.EntenxionsMethods;
 using HelpLac.Service.Interfaces;
 using LinqKit;
 using Microsoft.AspNetCore.Http;
@@ -23,9 +24,9 @@ namespace HelpLac.Service
 
         public async Task<Product> CreateAsync(string name, string ingredients, bool containsLactose, IFormFile image, CancellationToken cancellationToken)
         {
-            ValidateImage(image);
+            image.ValidateImage();
 
-            var bytesImage = await GetBytes(image);
+            var bytesImage = await image.GetBytesAsync();
 
             var product = new Product(name, containsLactose, ingredients, bytesImage);
             product.Validate();
@@ -33,28 +34,6 @@ namespace HelpLac.Service
             await _repository.AddAsync(product, cancellationToken);
             await _repository.SaveChangesAsync(cancellationToken);
             return product;
-        }
-
-        private void ValidateImage(IFormFile image)
-        {
-            var extension = Path.GetExtension(image.FileName).ToUpperInvariant();
-
-            if (extension != ".PNG" && extension != ".JPG" && extension != ".JPEG")
-                throw new ValidationEntityException("Image must be PNG, JPG or JPEG.", "Image");
-        }
-
-        private async Task<byte[]> GetBytes(IFormFile image)
-        {
-            if (image != null)
-            {
-                using (var memoryStream = new MemoryStream())
-                {
-                    await image.CopyToAsync(memoryStream);
-                    return memoryStream.ToArray();
-                }
-            }
-
-            return null;
         }
 
         public async Task<PaginatedEntity<Product>> GetAsync(ProductDto request, PaginationRequestDto pagination, CancellationToken cancellationToken)
@@ -75,10 +54,8 @@ namespace HelpLac.Service
             if (product == null)
                 throw new ValidationEntityException("Product not found");
 
-            if (image != null)
-                ValidateImage(image);
-
-            var bytesImage = await GetBytes(image);
+            image.ValidateImage();
+            var bytesImage = await image.GetBytesAsync();
 
             product.Update(name, containsLactose, ingredients, bytesImage);
             product.Validate();
