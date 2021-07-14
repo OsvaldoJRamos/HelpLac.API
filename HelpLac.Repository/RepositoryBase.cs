@@ -1,4 +1,5 @@
-﻿using HelpLac.Domain.Entities.Base;
+﻿using HelpLac.Domain.Dtos;
+using HelpLac.Domain.Entities.Base;
 using HelpLac.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -56,24 +57,27 @@ namespace HelpLac.Repository
             return await result.ToListAsync(cancellationToken);
         }
 
-        /// <summary>
-        /// Pesquisar por Predicates.
-        /// http://appetere.com/post/passing-include-statements-into-a-repository
-        /// </summary>
-        /// <param name="predicate">O predicate.</param>
-        /// <param name="includes">Os includes.</param>
-        /// <returns></returns>
-        public async Task<TEntity> SearchAsync(CancellationToken cancellationToken, Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includes)
+        public async Task<Tuple<IQueryable<TEntity>, PaginationResponseDto>> SearchAsync(PaginationRequestDto pagination, Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
         {
             var result = _dataset.Where(predicate);
+            var totalItens = result.Count();
+            var totalPages = totalItens / pagination.PageSize;
 
-            foreach (var includeExpression in includes)
-                result = result.Include(includeExpression);
+            var paginationResponse = new PaginationResponseDto(pagination.PageNumber, pagination.PageSize, totalPages, totalItens, pagination.OrderBy, pagination.Desc);
 
-            return await result.FirstOrDefaultAsync(cancellationToken);
+
+            var paginatedResult = result.Skip((pagination.PageNumber - 1) * pagination.PageSize).Take(pagination.PageSize);
+            return new Tuple<IQueryable<TEntity>, PaginationResponseDto>(paginatedResult, paginationResponse);
+        }
+
+        public async Task<IQueryable<TEntity>> SearchAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
+        {
+            var result = _dataset.Where(predicate);
+            return result;
         }
 
         public async Task<bool> SaveChangesAsync(CancellationToken cancellationToken) =>
             await _context.SaveChangesAsync(cancellationToken) > 0;
+
     }
 }
