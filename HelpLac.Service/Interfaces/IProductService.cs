@@ -13,5 +13,6 @@ namespace HelpLac.Service.Interfaces
     {
         Task<Product> CreateAsync(string name, string ingredients, bool containsLactose, IFormFile image, CancellationToken cancellationToken);
         Task<PaginatedEntity<Product>> GetAsync(ProductDto request, PaginationRequestDto pagination, CancellationToken cancellationToken);
+        Task<Product> UpdateAsync(Guid id, string name, string ingredients, bool containsLactose, IFormFile image, CancellationToken cancellationToken);
     }
 }

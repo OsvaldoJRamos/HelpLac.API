@@ -14,6 +14,14 @@ namespace HelpLac.Domain.Entities
         public string Ingredients { get; private set; }
         public byte[] Image { get; private set; }
 
+        public void Update(string name, bool containsLactose, string ingredients, byte[] image)
+        {
+            Name = name;
+            ContainsLactose = containsLactose;
+            Ingredients = ingredients;
+            Image = image;
+        }
+
         public Product(string name, bool containsLactose, string ingredients, byte[] image)
         {
             Name = name;

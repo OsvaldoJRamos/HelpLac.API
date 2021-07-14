@@ -46,6 +46,42 @@ namespace HelpLac.API.Controllers
             }
         }
 
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Product))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var product = await _productService.GetByIdAsync(id, cancellationToken);
+                if (product == null)
+                    throw new ValidationEntityException("Product not found");
+
+                await _productService.DeleteAsync(product, cancellationToken);
+                return new ObjectResult(product);
+            }
+            catch (ValidationEntityException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Product))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Put(Guid id, [FromForm] CreateProductRequest request, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var product = await _productService.UpdateAsync(id, request.Name, request.Ingredients, request.ContainsLactose, request.Image, cancellationToken);
+                return new ObjectResult(product);
+            }
+            catch (ValidationEntityException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Product))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

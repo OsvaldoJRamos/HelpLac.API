@@ -45,11 +45,16 @@ namespace HelpLac.Service
 
         private async Task<byte[]> GetBytes(IFormFile image)
         {
-            using (var memoryStream = new MemoryStream())
+            if (image != null)
             {
-                await image.CopyToAsync(memoryStream);
-                return memoryStream.ToArray();
+                using (var memoryStream = new MemoryStream())
+                {
+                    await image.CopyToAsync(memoryStream);
+                    return memoryStream.ToArray();
+                }
             }
+
+            return null;
         }
 
         public async Task<PaginatedEntity<Product>> GetAsync(ProductDto request, PaginationRequestDto pagination, CancellationToken cancellationToken)
@@ -62,6 +67,24 @@ namespace HelpLac.Service
 
             var products = await _repository.SearchAsync(pagination, filterExpression, cancellationToken);
             return new PaginatedEntity<Product>(products);
+        }
+
+        public async Task<Product> UpdateAsync(Guid id, string name, string ingredients, bool containsLactose, IFormFile image, CancellationToken cancellationToken)
+        {
+            var product = await GetByIdAsync(id, cancellationToken);
+            if (product == null)
+                throw new ValidationEntityException("Product not found");
+
+            if (image != null)
+                ValidateImage(image);
+
+            var bytesImage = await GetBytes(image);
+
+            product.Update(name, containsLactose, ingredients, bytesImage);
+            product.Validate();
+
+            await base.UpdateAsync(product, cancellationToken);
+            return product;
         }
     }
 }
