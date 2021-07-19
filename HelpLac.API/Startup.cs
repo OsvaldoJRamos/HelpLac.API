@@ -74,6 +74,8 @@ namespace HelpLac.API
 
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<ICommentService, CommentService>();
+            services.AddScoped<ICommentRepository, CommentRepository>();
 
             services.AddAutoMapper(typeof(AutoMapperProfile));
 
@@ -109,7 +111,7 @@ namespace HelpLac.API
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {

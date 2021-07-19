@@ -43,6 +43,7 @@ namespace HelpLac.Repository
             });
 
             builder.Entity<Product>().HasQueryFilter(entity => entity.IsActive);
+            builder.Entity<Comment>().HasQueryFilter(entity => entity.IsActive);
         }
 
         public override int SaveChanges()
@@ -81,7 +82,11 @@ namespace HelpLac.Repository
             }
         }
 
+
+
+
         public DbSet<Product> Product { get; set; }
+        public DbSet<Comment> Comment { get; set; }
     }
 }
 

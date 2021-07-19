@@ -3,8 +3,8 @@ using System;
 
 namespace HelpLac.Repository.Interfaces
 {
-    public interface IProductRepository : IRepositoryBase<Product, Guid>
+    public interface ICommentRepository : IRepositoryBase<Comment, Guid>
     {
 
-    }   
+    }
 }
