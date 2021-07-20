@@ -34,13 +34,13 @@ namespace HelpLac.Service
             return item;
         }
 
-        public async Task DeleteAsync(TEntity entity, CancellationToken cancellationToken)
+        public virtual async Task DeleteAsync(TEntity entity, CancellationToken cancellationToken)
         {
             await _repository.DeleteAsync(entity, cancellationToken);
             await _repository.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task DeleteByIdAsync(TId id, CancellationToken cancellationToken)
+        public virtual async Task DeleteByIdAsync(TId id, CancellationToken cancellationToken)
         {
             await _repository.DeleteByIdAsync(id, cancellationToken);
             await _repository.SaveChangesAsync(cancellationToken);

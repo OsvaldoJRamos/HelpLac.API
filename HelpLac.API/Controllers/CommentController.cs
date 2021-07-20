@@ -48,5 +48,41 @@ namespace HelpLac.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Comment))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
+        {
+            try
+            {
+                GetToken();
+
+                var comment = await _commentService.DeleteByIdAsync(id, _userId, cancellationToken);
+                return new ObjectResult(comment);
+            }
+            catch (ValidationEntityException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Comment>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Get([FromQuery] Guid productId, CancellationToken cancellationToken)
+        {
+            try
+            {
+                GetToken();
+
+                var comments = await _commentService.GetAsync(productId, cancellationToken);
+                return new ObjectResult(comments);
+            }
+            catch (ValidationEntityException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
