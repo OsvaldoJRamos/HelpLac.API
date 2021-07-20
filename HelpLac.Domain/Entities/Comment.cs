@@ -1,7 +1,9 @@
 ﻿using HelpLac.Domain.Entities.Base;
 using HelpLac.Domain.Validation;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace HelpLac.Domain.Entities
 {
@@ -13,6 +15,7 @@ namespace HelpLac.Domain.Entities
         public int UserId { get; set; }
         public string Description { get; set; }
         public Guid? ReplyCommentId { get; set; }
+        public List<Comment> Answers { get; set; } = new List<Comment>();
 
         public void Update(Guid productId, int userId, string description, Guid? replyCommentId)
         {

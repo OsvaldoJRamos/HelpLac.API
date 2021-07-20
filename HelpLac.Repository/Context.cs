@@ -42,6 +42,16 @@ namespace HelpLac.Repository
                         .IsRequired();
             });
 
+            builder.Entity<Comment>(comment =>
+            {
+                comment.Property(x => x.ReplyCommentId)
+                      .HasColumnName("ReplyCommentId");
+
+                comment.HasMany(d => d.Answers)
+                      .WithOne()
+                      .HasForeignKey(x => x.ReplyCommentId);
+            });
+
             builder.Entity<Product>().HasQueryFilter(entity => entity.IsActive);
             builder.Entity<Comment>().HasQueryFilter(entity => entity.IsActive);
         }

@@ -3,6 +3,7 @@ using HelpLac.Domain.Validation;
 using HelpLac.Repository.Interfaces;
 using HelpLac.Service.Interfaces;
 using LinqKit;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,10 +46,12 @@ namespace HelpLac.Service
         public async Task<List<Comment>> GetAsync(Guid productId, CancellationToken cancellationToken)
         {
             Expression<Func<Comment, bool>> filterExpression = PredicateBuilder.New<Comment>(true);
-            filterExpression = filterExpression.And(x => x.ProductId == productId && !x.ReplyCommentId.HasValue);
+            filterExpression = filterExpression.And(x => x.ProductId == productId);
 
             var comments = await _repository.SearchAsync(filterExpression, cancellationToken);
-            return comments.ToList();
+
+            var result = new List<Comment>(comments);
+            return result.Where(t => !t.ReplyCommentId.HasValue).ToList();
         }
     }
 }
