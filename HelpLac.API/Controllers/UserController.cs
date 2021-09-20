@@ -65,12 +65,12 @@ namespace HelpLac.API.Controllers
         {
             try
             {
-                var user = await _userManager.FindByNameAsync(userLogin.UserName);
+                var user = await _userManager.FindByEmailAsync(userLogin.Email);
                 var result = await _signInManager.CheckPasswordSignInAsync(user, userLogin.Password, false);
 
                 if (result.Succeeded)
                 {
-                    var appUser = await _userManager.Users.FirstOrDefaultAsync(u => u.NormalizedUserName == userLogin.UserName.ToUpper());
+                    var appUser = await _userManager.Users.FirstOrDefaultAsync(u => u.NormalizedEmail == userLogin.Email.ToUpper());
 
                     var response = _mapper.Map<UserResponse>(appUser);
 
@@ -82,6 +82,25 @@ namespace HelpLac.API.Controllers
                 }
 
                 return Unauthorized();
+            }
+            catch (Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao efetuar login: {ex.Message}");
+            }
+        }
+
+        [HttpPost("refresh")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Refresh(string token)
+        {
+            try
+            {
+                token = token.Replace("Bearer", "").Trim();
+                var handler = new JwtSecurityTokenHandler();
+                var jwtSecurityToken = handler.ReadJwtToken(token);
+
+
+                return Ok(new { token = token });
             }
             catch (Exception ex)
             {

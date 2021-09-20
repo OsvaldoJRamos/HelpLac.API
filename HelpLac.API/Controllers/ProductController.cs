@@ -5,6 +5,7 @@ using HelpLac.Domain.Dtos;
 using HelpLac.Domain.Entities;
 using HelpLac.Domain.Validation;
 using HelpLac.Service.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -17,6 +18,7 @@ namespace HelpLac.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [AllowAnonymous]
     public class ProductController : ApiController
     {
         private readonly IProductService _productService;
