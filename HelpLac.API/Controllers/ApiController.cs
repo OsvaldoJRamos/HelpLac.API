@@ -20,10 +20,14 @@ namespace HelpLac.API.Controllers
         {
             var requestToken = Request.Headers["Authorization"];
             var token = requestToken.ToString().Replace("Bearer", "").Trim();
-            var handler = new JwtSecurityTokenHandler();
-            var jwtSecurityToken = handler.ReadJwtToken(token);
 
-            _userId = Convert.ToInt32(jwtSecurityToken.Claims.FirstOrDefault(c => c.Type == "nameid").Value);
+            if (!string.IsNullOrEmpty(token))
+            {
+                var handler = new JwtSecurityTokenHandler();
+                var jwtSecurityToken = handler.ReadJwtToken(token);
+
+                _userId = Convert.ToInt32(jwtSecurityToken.Claims.FirstOrDefault(c => c.Type == "nameid").Value);
+            }
         }
     }
 }
