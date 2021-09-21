@@ -68,6 +68,7 @@ namespace HelpLac.API.Controllers
         }
 
         [HttpGet("")]
+        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Comment>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Get([FromQuery] Guid productId, CancellationToken cancellationToken)
