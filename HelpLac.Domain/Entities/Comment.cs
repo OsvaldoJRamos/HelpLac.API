@@ -3,6 +3,7 @@ using HelpLac.Domain.Validation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace HelpLac.Domain.Entities
@@ -13,6 +14,8 @@ namespace HelpLac.Domain.Entities
         public Guid Id { get; private set; } = Guid.NewGuid();
         public Guid ProductId { get; set; }
         public int UserId { get; set; }
+        [NotMapped]
+        public string UserName { get; set; }
         public string Description { get; set; }
         public Guid? ReplyCommentId { get; set; }
         public List<Comment> Answers { get; set; } = new List<Comment>();

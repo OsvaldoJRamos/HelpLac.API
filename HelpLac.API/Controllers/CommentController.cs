@@ -4,10 +4,12 @@ using HelpLac.API.Models;
 using HelpLac.API.Models.Request;
 using HelpLac.Domain.Dtos;
 using HelpLac.Domain.Entities;
+using HelpLac.Domain.Entities.Identity;
 using HelpLac.Domain.Validation;
 using HelpLac.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -22,13 +24,16 @@ namespace HelpLac.API.Controllers
     public class CommentController : ApiController
     {
         private readonly ICommentService _commentService;
+        private readonly UserManager<User> _userManager;
 
         public CommentController(
             IMapper mapper,
-            ICommentService commentService)
+            ICommentService commentService,
+            UserManager<User> userManager)
             : base(mapper)
         {
             _commentService = commentService;
+            _userManager = userManager;
         }
 
         [HttpPost]
@@ -78,6 +83,13 @@ namespace HelpLac.API.Controllers
                 GetToken();
 
                 var comments = await _commentService.GetAsync(productId, cancellationToken);
+
+                foreach (var comment in comments)
+                {
+                    var user = await _userManager.FindByIdAsync(comment.UserId.ToString());
+                    comment.UserName = user.UserName;
+                }
+
                 return new ObjectResult(comments);
             }
             catch (ValidationEntityException ex)
