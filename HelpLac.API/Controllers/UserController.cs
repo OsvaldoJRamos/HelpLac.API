@@ -45,7 +45,7 @@ namespace HelpLac.API.Controllers
                 var user = _mapper.Map<User>(userDto);
                 var result = await _userManager.CreateAsync(user, userDto.Password);
 
-                var response = _mapper.Map<UserResponse>(result);
+                var response = _mapper.Map<UserResponse>(user);
                 if (result.Succeeded)
                 {
                     return Created("GetUser", response);

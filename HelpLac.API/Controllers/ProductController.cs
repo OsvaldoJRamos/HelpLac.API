@@ -39,7 +39,7 @@ namespace HelpLac.API.Controllers
         {
             try
             {
-                var product = await _productService.CreateAsync(request.Name, request.Ingredients, request.ContainsLactose, request.Image, cancellationToken);
+                var product = await _productService.CreateAsync(request.Name, request.Ingredients, request.ContainsLactose, request.Image, request.ImageUrl, cancellationToken);
                 return new ObjectResult(product);
             }
             catch (ValidationEntityException ex)
@@ -75,7 +75,7 @@ namespace HelpLac.API.Controllers
         {
             try
             {
-                var product = await _productService.UpdateAsync(id, request.Name, request.Ingredients, request.ContainsLactose, request.Image, cancellationToken);
+                var product = await _productService.UpdateAsync(id, request.Name, request.Ingredients, request.ContainsLactose, request.Image, request.ImageUrl, cancellationToken);
                 return new ObjectResult(product);
             }
             catch (ValidationEntityException ex)

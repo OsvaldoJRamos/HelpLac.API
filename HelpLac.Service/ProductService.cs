@@ -22,13 +22,13 @@ namespace HelpLac.Service
         {
         }
 
-        public async Task<Product> CreateAsync(string name, string ingredients, bool containsLactose, IFormFile image, CancellationToken cancellationToken)
+        public async Task<Product> CreateAsync(string name, string ingredients, bool containsLactose, IFormFile image, string imageUrl, CancellationToken cancellationToken)
         {
             image.ValidateImage();
 
             var bytesImage = await image.GetBytesAsync();
 
-            var product = new Product(name, containsLactose, ingredients, bytesImage);
+            var product = new Product(name, containsLactose, ingredients, bytesImage, imageUrl);
             product.Validate();
 
             await _repository.AddAsync(product, cancellationToken);
@@ -48,7 +48,7 @@ namespace HelpLac.Service
             return new PaginatedEntity<Product>(products);
         }
 
-        public async Task<Product> UpdateAsync(Guid id, string name, string ingredients, bool containsLactose, IFormFile image, CancellationToken cancellationToken)
+        public async Task<Product> UpdateAsync(Guid id, string name, string ingredients, bool containsLactose, IFormFile image, string imageUrl, CancellationToken cancellationToken)
         {
             var product = await GetByIdAsync(id, cancellationToken);
             if (product == null)
@@ -57,7 +57,7 @@ namespace HelpLac.Service
             image.ValidateImage();
             var bytesImage = await image.GetBytesAsync();
 
-            product.Update(name, containsLactose, ingredients, bytesImage);
+            product.Update(name, containsLactose, ingredients, bytesImage, imageUrl);
             product.Validate();
 
             await base.UpdateAsync(product, cancellationToken);

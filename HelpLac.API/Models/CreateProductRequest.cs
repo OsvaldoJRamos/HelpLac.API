@@ -8,5 +8,6 @@ namespace HelpLac.API.Models
         public string Ingredients { get; set; }
         public bool ContainsLactose { get; set; }
         public IFormFile Image { get; set; }
+        public string ImageUrl { get; set; }
     }
 }
