@@ -91,7 +91,7 @@ namespace HelpLac.API.Controllers
 
         [HttpPost("refresh")]
         [AllowAnonymous]
-        public async Task<IActionResult> Refresh(string token)
+        public async Task<IActionResult> Refresh([FromBody] string token)
         {
             try
             {
