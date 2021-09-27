@@ -91,11 +91,13 @@ namespace HelpLac.API.Controllers
 
         [HttpPost("refresh")]
         [AllowAnonymous]
-        public async Task<IActionResult> Refresh([FromBody] string token)
+        public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequest request)
         {
+            //todo
+
             try
             {
-                token = token.Replace("Bearer", "").Trim();
+                var token = request.Token.Replace("Bearer", "").Trim();
                 var handler = new JwtSecurityTokenHandler();
                 var jwtSecurityToken = handler.ReadJwtToken(token);
 
