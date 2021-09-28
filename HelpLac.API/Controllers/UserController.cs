@@ -43,6 +43,8 @@ namespace HelpLac.API.Controllers
             try
             {
                 var user = _mapper.Map<User>(userDto);
+                //todo
+                user.UserName = user.UserName.Replace(" ", "_");
                 var result = await _userManager.CreateAsync(user, userDto.Password);
 
                 var response = _mapper.Map<UserResponse>(user);

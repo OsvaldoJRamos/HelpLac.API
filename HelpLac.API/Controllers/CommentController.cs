@@ -87,7 +87,7 @@ namespace HelpLac.API.Controllers
                 foreach (var comment in comments)
                 {
                     var user = await _userManager.FindByIdAsync(comment.UserId.ToString());
-                    comment.UserName = user.UserName;
+                    comment.UserName = user.UserName.Replace("_", " ");
                 }
 
                 return new ObjectResult(comments);
